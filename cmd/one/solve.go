@@ -3,7 +3,9 @@ package main
 
 import (
 	"aoc/one"
+	"fmt"
 	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -24,6 +26,16 @@ func Adder(ch chan int) {
 }
 
 func main() {
+
+	if len(os.Args) == 0 {
+		if sum := one.Solve(one.GetInput()); sum == 54473 {
+			fmt.Println("Success")
+			os.Exit(1)
+		}
+		fmt.Println("Failure")
+		os.Exit(0)
+	}
+
 	sumCh := make(chan int)
 
 	go Adder(sumCh)
