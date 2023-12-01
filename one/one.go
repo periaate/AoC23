@@ -72,36 +72,91 @@ func GetInput() []string {
 
 func Solve(input []string) (sum int) {
 	for _, problem := range input {
-		// Initialize a 0 length array with 16 length of memory for mutationless appending.
+		// 0 length, 8 size, allowing for appending without resizing
 		n := make([]int, 0, 16)
 		for runeI := 0; runeI <= len(problem); runeI++ {
 			l := len(problem) - runeI
-			if l >= 5 {
-				str := problem[runeI : runeI+5]
-				if v, ok := lookup[str]; ok {
-					n = append(n, v)
+			if l != 0 {
+				r := problem[runeI]
+				switch r {
+				case '0':
+					n = append(n, 0)
 					continue
-				}
-			}
-			if l >= 4 {
-				str := problem[runeI : runeI+4]
-				if v, ok := lookup[str]; ok {
-					n = append(n, v)
+				case '1':
+					n = append(n, 1)
 					continue
-				}
-			}
-			if l >= 3 {
-				str := problem[runeI : runeI+3]
-				if v, ok := lookup[str]; ok {
-					n = append(n, v)
+				case '2':
+					n = append(n, 2)
+					continue
+				case '3':
+					n = append(n, 3)
+					continue
+				case '4':
+					n = append(n, 4)
+					continue
+				case '5':
+					n = append(n, 5)
+					continue
+				case '6':
+					n = append(n, 6)
+					continue
+				case '7':
+					n = append(n, 7)
+					continue
+				case '8':
+					n = append(n, 8)
+					continue
+				case '9':
+					n = append(n, 9)
 					continue
 				}
 			}
 
-			if l >= 1 {
-				str := string(problem[runeI])
-				if v, ok := lookup[str]; ok {
-					n = append(n, v)
+			if l >= 3 {
+				str := problem[runeI : runeI+3]
+				switch str {
+				case "one":
+					n = append(n, 1)
+					continue
+				case "two":
+					n = append(n, 2)
+					continue
+				case "six":
+					n = append(n, 6)
+					continue
+				}
+			}
+
+			if l >= 4 {
+				str := problem[runeI : runeI+4]
+				switch str {
+				case "zero":
+					n = append(n, 0)
+					continue
+				case "four":
+					n = append(n, 4)
+					continue
+				case "five":
+					n = append(n, 5)
+					continue
+				case "nine":
+					n = append(n, 9)
+					continue
+				}
+			}
+
+			if l >= 5 {
+				str := problem[runeI : runeI+5]
+				switch str {
+				case "three":
+					n = append(n, 3)
+					continue
+				case "seven":
+					n = append(n, 7)
+					continue
+				case "eight":
+					n = append(n, 8)
+					continue
 				}
 			}
 		}

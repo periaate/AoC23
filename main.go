@@ -1,11 +1,7 @@
 package main
 
-import (
-	"aoc/one"
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	sol := one.Solve(one.GetInput())
-	fmt.Println(sol)
+	fmt.Println("Select specific days from the `cmd/*` directories")
 }
