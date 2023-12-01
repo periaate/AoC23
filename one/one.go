@@ -16,36 +16,6 @@ a1b2c3d4e5f
 treb7uchet
 */
 
-var lookup = map[string]int{
-	// 3 long
-	"one": 1,
-	"two": 2,
-	"six": 6,
-
-	// 4 long
-	"zero": 0,
-	"four": 4,
-	"five": 5,
-	"nine": 9,
-
-	// 5 long
-	"three": 3,
-	"seven": 7,
-	"eight": 8,
-
-	// 1 long
-	"0": 0,
-	"1": 1,
-	"2": 2,
-	"3": 3,
-	"4": 4,
-	"5": 5,
-	"6": 6,
-	"7": 7,
-	"8": 8,
-	"9": 9,
-}
-
 var Example = []string{
 	"1abc2",
 	"pqr3stu8vwx",
