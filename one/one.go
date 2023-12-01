@@ -16,7 +16,7 @@ a1b2c3d4e5f
 treb7uchet
 */
 
-var lookupStr = map[string]int{
+var lookup = map[string]int{
 	// 3 long
 	"one": 1,
 	"two": 2,
@@ -32,19 +32,18 @@ var lookupStr = map[string]int{
 	"three": 3,
 	"seven": 7,
 	"eight": 8,
-}
 
-var lookupNum = map[byte]int{
-	'0': 0,
-	'1': 1,
-	'2': 2,
-	'3': 3,
-	'4': 4,
-	'5': 5,
-	'6': 6,
-	'7': 7,
-	'8': 8,
-	'9': 9,
+	// 1 long
+	"0": 0,
+	"1": 1,
+	"2": 2,
+	"3": 3,
+	"4": 4,
+	"5": 5,
+	"6": 6,
+	"7": 7,
+	"8": 8,
+	"9": 9,
 }
 
 var Example = []string{
@@ -53,49 +52,59 @@ var Example = []string{
 	"a1b2c3d4e5f",
 	"treb7uchet",
 }
+var ExampleTwo = []string{
+	"two1nine",
+	"eightwothree",
+	"abcone2threexyz",
+	"xtwone3four",
+	"4nineeightseven2",
+	"zoneight234",
+	"7pqrstsixteen",
+}
 
-func Solve() (sum int) {
+func GetInput() []string {
 	input, err := util.ReadLines("one/input.txt")
 	if err != nil {
 		log.Fatalln(err)
 	}
+	return input
+}
 
-	nums := make([][]int, 0, len(input))
-
+func Solve(input []string) (sum int) {
 	for _, problem := range input {
-		current := []int{}
-		for runeI := 0; runeI < len(problem); runeI++ {
-
-			if v, ok := lookupNum[problem[runeI]]; ok {
-				current = append(current, v)
-				continue
+		// Initialize a 0 length array with 16 length of memory for mutationless appending.
+		n := make([]int, 0, 16)
+		for runeI := 0; runeI <= len(problem); runeI++ {
+			l := len(problem) - runeI
+			if l >= 5 {
+				str := problem[runeI : runeI+5]
+				if v, ok := lookup[str]; ok {
+					n = append(n, v)
+					continue
+				}
+			}
+			if l >= 4 {
+				str := problem[runeI : runeI+4]
+				if v, ok := lookup[str]; ok {
+					n = append(n, v)
+					continue
+				}
+			}
+			if l >= 3 {
+				str := problem[runeI : runeI+3]
+				if v, ok := lookup[str]; ok {
+					n = append(n, v)
+					continue
+				}
 			}
 
-			switch l := runeI - len(problem); l {
-			case 5:
-				str := problem[runeI : runeI+5]
-				if v, ok := lookupStr[str]; ok {
-					current = append(current, v)
-				}
-				fallthrough
-			case 4:
-				str := problem[runeI : runeI+4]
-				if v, ok := lookupStr[str]; ok {
-					current = append(current, v)
-				}
-				fallthrough
-			case 3:
-				str := problem[runeI : runeI+3]
-				if v, ok := lookupStr[str]; ok {
-					current = append(current, v)
+			if l >= 1 {
+				str := string(problem[runeI])
+				if v, ok := lookup[str]; ok {
+					n = append(n, v)
 				}
 			}
 		}
-
-		nums = append(nums, current)
-	}
-
-	for _, n := range nums {
 		sum += n[0]*10 + n[len(n)-1]
 	}
 

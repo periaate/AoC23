@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	sol := one.Solve()
+	sol := one.Solve(one.GetInput())
 	fmt.Println(sol)
 }
