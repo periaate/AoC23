@@ -42,7 +42,7 @@ func GetInput() []string {
 
 func Solve(input []string) (sum int) {
 	for _, problem := range input {
-		// 0 length, 8 size, allowing for appending without resizing
+		// 0 length, 16 size, allowing for appending without resizing
 		n := make([]int, 0, 16)
 		for runeI := 0; runeI <= len(problem); runeI++ {
 			l := len(problem) - runeI
