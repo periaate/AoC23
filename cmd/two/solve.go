@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
-	res := two.Solve(util.ReadLines(two.Fp))
+	res := two.SolvePartTwo(util.ReadLines(two.Fp))
+	fmt.Println(res)
+	res = two.SolvePartOne(util.ReadLines(two.Fp))
 	fmt.Println(res)
 }

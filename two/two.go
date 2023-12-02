@@ -3,7 +3,6 @@ package two
 import (
 	"aoc/lib/arrays"
 	"aoc/lib/util"
-	"strings"
 )
 
 const Fp = "two/input.txt"
@@ -40,90 +39,61 @@ Part 2
 - Game 4 required at least 14 red, 3 green, and 15 blue cubes.
 - Game 5 needed no fewer than 6 red, 3 green, and 2 blue cubes in the bag.
 */
-const (
-	red   = "red"
-	green = "green"
-	blue  = "blue"
-)
 
-func Solve(input []string) (sum int) {
+func SolvePartTwo(input []string) (sum int) {
 	for _, item := range input {
-		game := arrays.SplitWithAll(item, []string{":", ";"})
-		cubes := game[2:]
+		cubesInGame := arrays.SplitWithAll(item, []string{":", ";", ","})[1:]
+		/* Logic goes:
+		item := "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
+		cubesInGame := arrays.SplitWithAll(item, []string{":", ";", ","})[1:]
+		cubesInGame == ["3 blue", "4 red", "2 green", "6 blue", "2 green"]
+		*/
+		localMax := map[string]int{"red": 0, "green": 0, "blue": 0}
 
-		localMax := map[string]int{
-			red:   0,
-			green: 0,
-			blue:  0,
-		}
+		for _, cube := range cubesInGame {
+			item := arrays.SplitWithAll(cube, []string{" "})
 
-		for _, cube := range cubes {
-			sides := arrays.SplitWithAll(cube, []string{","})
+			color := item[1]
+			num := util.ToInt(item[0])
 
-			for _, side := range sides {
-				if len(side) < 3 {
-					continue
-				}
-
-				item := arrays.SplitWithAll(strings.TrimSpace(side), []string{" "})
-
-				color := item[2]
-				num := util.ToInt(item[0])
-
-				if num > localMax[color] {
-					localMax[color] = num
-				}
+			if num > localMax[color] {
+				localMax[color] = num
 			}
 		}
 
-		sum += localMax[red] * localMax[green] * localMax[blue]
+		sum += localMax["red"] * localMax["green"] * localMax["blue"]
 	}
 
 	return sum
 }
 
-// Part 1 solution
-/*
-var isPossible = map[string]int{
-	"red":   12,
-	"green": 13,
-	"blue":  14,
-}
+func SolvePartOne(input []string) (sum int) {
+	var isPossible = map[string]int{"red": 12, "green": 13, "blue": 14}
 
-func Parse(input []string) (sum int) {
 	for _, item := range input {
-		game := arrays.SplitWithAll(item, []string{":", ";"})
-		index := arrays.SplitWithAll(game[0]+game[1], []string{" "})[2]
+		game := arrays.SplitWithAll(item, []string{":", ";", ","})
 
-		cubes := game[2:]
+		// "Game 123..."[5:] == "123..."
+		index := util.ToInt(game[0][5:])
+
+		cubes := game[1:]
 		gamePossible := true
 
 		for _, cube := range cubes {
-			sides := arrays.SplitWithAll(cube, []string{","})
+			item := arrays.SplitWithAll(cube, []string{" "})
 
-			for _, side := range sides {
-				if len(side) < 3 {
-					continue
-				}
+			color := item[1]
+			num := util.ToInt(item[0])
 
-				item := arrays.SplitWithAll(strings.TrimSpace(side), []string{" "})
-
-				color := item[2]
-				num := util.ToInt(item[0])
-
-				if v, ok := isPossible[color]; ok {
-					if v < num {
-						gamePossible = false
-					}
-				}
+			if v, ok := isPossible[color]; ok && v < num {
+				gamePossible = false
 			}
 		}
 
 		if gamePossible {
-			sum += util.ToInt(index)
+			sum += index
 		}
 	}
 
 	return sum
 }
-*/

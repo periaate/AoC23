@@ -23,9 +23,6 @@ func SplitWithAll(str string, match []string) []string {
 				res = append(res, str[lastI:i])
 			}
 
-			if len(pattern) != 0 {
-				res = append(res, pattern)
-			}
 			lastI = i + len(pattern)
 			i += len(pattern) - 1
 			break
