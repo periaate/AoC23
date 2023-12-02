@@ -5,6 +5,11 @@ import (
 	"aoc/lib/util"
 )
 
+const (
+	CorrectPartOne = 2204
+	CorrectPartTwo = 71036
+)
+
 const Fp = "two/input.txt"
 
 /*
