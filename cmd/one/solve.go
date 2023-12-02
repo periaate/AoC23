@@ -2,6 +2,7 @@
 package main
 
 import (
+	"aoc/lib/util"
 	"aoc/one"
 	"fmt"
 	"log"
@@ -26,21 +27,22 @@ func Adder(ch chan int) {
 }
 
 func main() {
+	input := util.ReadLines(one.Fp)
 
-	if len(os.Args) == 0 {
-		if sum := one.Solve(one.GetInput()); sum == 54473 {
+	if len(os.Args) == 1 {
+		if sum := one.Solve(input); sum == 54473 {
 			fmt.Println("Success")
 			os.Exit(1)
+		} else {
+			fmt.Println("Failure", sum)
+			os.Exit(0)
 		}
-		fmt.Println("Failure")
-		os.Exit(0)
 	}
 
 	sumCh := make(chan int)
 
 	go Adder(sumCh)
 
-	input := one.GetInput()
 	var size int64 = 1_000_000_000
 	times := int(size) / len(input)
 
@@ -52,6 +54,7 @@ func main() {
 			sumCh <- one.Solve(input)
 		}()
 
+		// sum += one.Solve(input)
 	}
 
 	wg.Wait()

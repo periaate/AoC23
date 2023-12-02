@@ -2,13 +2,14 @@ package util
 
 import (
 	"bufio"
+	"log"
 	"os"
 )
 
-func ReadLines(src string) (lines []string, err error) {
+func ReadLines(src string) (lines []string) {
 	file, err := os.OpenFile(src, os.O_RDONLY, 0777)
 	if err != nil {
-		return
+		log.Fatalln(err)
 	}
 	defer file.Close()
 	sc := bufio.NewScanner(file)
@@ -18,5 +19,5 @@ func ReadLines(src string) (lines []string, err error) {
 		lines = append(lines, data)
 	}
 
-	return lines, nil
+	return lines
 }
