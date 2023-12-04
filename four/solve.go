@@ -44,9 +44,6 @@ func Solve(input []string) (sum int) {
 		j := 0
 		copies[i]++
 		for el := range wMap {
-			if j > 100000 && i == j {
-				return j
-			}
 			if res, ok := hMap[el]; ok {
 				if el == res {
 					prod = 1 << c
