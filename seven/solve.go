@@ -8,17 +8,13 @@ import (
 )
 
 const Ex = "seven/example.txt"
-const CorrectEx = 6440
-const CorrectEx2 = 5905
 const Fp = "seven/input.txt"
 
 func main() {
-
 	input := util.ReadLines(Fp)
 	res := Solve(input)
 	fmt.Println(res)
 	fmt.Println(Solve(util.ReadLines(Ex)))
-	fmt.Println(CorrectEx2 == Solve(util.ReadLines(Ex)))
 }
 
 const (
@@ -31,7 +27,7 @@ const (
 	FiveKind
 )
 
-var Strength = map[rune]int{
+var Strength = map[uint8]int{
 	'J': 1,
 	'2': 2,
 	'3': 3,
@@ -55,124 +51,57 @@ type hand struct {
 
 func Solve(input []string) (res int) {
 	hands := []hand{}
-	for _, hand := range input {
-		s := arrays.SplitWithAll(hand, []string{" "})
-		hand := score(s[0])
-		hand.Cards = s[0]
-		hand.Value = util.ToInt(s[1])
+	for _, h := range input {
+		s := arrays.SplitWithAll(h, []string{" "})
+		hand := hand{
+			Type:  score(s[0]),
+			Cards: s[0],
+			Value: util.ToInt(s[1]),
+		}
 		hands = append(hands, hand)
 	}
 
-	sort.Slice(hands, func(i, j int) bool {
+	sort.SliceStable(hands, func(i, j int) bool {
 		if hands[i].Type == hands[j].Type {
-			k := 0
-			for {
-				a := rune(hands[i].Cards[k])
-				b := rune(hands[j].Cards[k])
+			for k := 0; k < len(hands[i].Cards); k++ {
+				a := Strength[hands[i].Cards[k]]
+				b := Strength[hands[j].Cards[k]]
 				if a != b {
-					return Strength[a] < Strength[b]
+					return a < b
 				}
-				k++
 			}
 		}
 		return hands[i].Type < hands[j].Type
 	})
 
 	for i, hand := range hands {
-		fmt.Println(hand)
 		res += (i + 1) * hand.Value
 	}
-	return
+	return res
 }
 
-func score(str string) (h hand) {
+var scoreMap = map[[2]int]int{
+	{5, 0}: FiveKind,
+	{4, 1}: FourKind,
+	{3, 2}: FullHouse,
+	{3, 1}: ThreeKind,
+	{2, 2}: TwoPair,
+	{2, 1}: OnePair,
+	{1, 1}: HighCard,
+}
+
+func score(str string) int {
 	var jCount int
-	labels := map[rune]int{}
-	for _, r := range str {
-		labels[r]++
-		if r == 'J' {
+	labels := make([]int, 'T'+1)
+
+	for _, c := range str {
+		if c != 'J' {
+			labels[c]++
+		} else {
 			jCount++
 		}
 	}
 
-	if jCount == 5 || jCount == 4 {
-		h.Type = FiveKind
-		return h
-	}
-	counted := false
-	sett := map[int]bool{}
-
-	switch len(labels) {
-	case 5: // Must be high card
-		for k, v := range labels {
-			if !sett[v] {
-				sett[v] = true
-				h.Type = HighCard
-			}
-			if k != 'J' && !counted {
-				h.Type += jCount
-				counted = true
-			}
-		}
-	case 4: // Must be one pair
-		for k, v := range labels {
-			if !sett[v] {
-				sett[v] = true
-				h.Type = OnePair
-			}
-			if k != 'J' && !counted {
-				h.Type += jCount
-				counted = true
-			}
-		}
-	case 3: // Must be two pair, three kind
-		for k, v := range labels {
-			if v == 2 {
-				if !sett[v] {
-					sett[v] = true
-					h.Type = TwoPair
-				}
-				if k != 'J' && !counted {
-					h.Type += jCount
-					counted = true
-				}
-			}
-			if v == 3 {
-				if !sett[v] {
-					sett[v] = true
-					h.Type = ThreeKind
-				}
-				if k != 'J' && !counted {
-					h.Type += jCount
-					counted = true
-				}
-			}
-		}
-	case 2: // Must be full house, four kind
-		for k, v := range labels {
-			if v == 4 {
-				if !sett[v] {
-					sett[v] = true
-					h.Type = FourKind
-				}
-				if k != 'J' && !counted {
-					h.Type += jCount
-				}
-			}
-			if v == 3 {
-				if !sett[v] {
-					sett[v] = true
-					h.Type = FullHouse
-				}
-				if k != 'J' && !counted {
-					h.Type += jCount
-					counted = true
-				}
-			}
-		}
-	case 1: // Must be Five kind
-		h.Type = FiveKind
-	}
-
-	return h
+	sort.SliceStable(labels, func(i, j int) bool { return labels[i] > labels[j] })
+	return scoreMap[[2]int{labels[0] + jCount, labels[1]}]
 }
